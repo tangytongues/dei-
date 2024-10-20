@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Spend a Day with Me?</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #fdf5e6;
+            text-align: center;
+            padding: 50px;
+            position: relative;
+            height: 100vh;
+            margin: 0;
+        }
+        #backgroundImage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(70%) blur(2px);
+        }
+        #container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: rgba(255, 228, 225, 0.9);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        h1, h2 {
+            color: #ff69b4;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        button:hover {
+            background-color: #ff1493;
+        }
+        .error {
+            color: red;
+            font-size: 1rem;
+        }
+        #noBtn {
+            position: absolute;
+            transition: left 0.2s, top 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cute Chibi-Style Background Image -->
+    <img id="backgroundImage" src="https://lh3.googleusercontent.com/d/1N3CM_UkW3UfnB2U_RrTeJ-zkYfFJCE3S" alt="Chibi Background"/>
+
+    <div id="container">
+        <h1>Hey! Ready for a fun surprise?</h1>
+        <p>Enter your name to continue:</p>
+
+        <!-- Name Input Section -->
+        <input type="text" id="nameInput" placeholder="Enter your name" />
+        <button id="submitNameBtn">Submit</button>
+        <p id="errorMessage" class="error hidden">Oops, that’s not the right name! Try again!</p>
+
+        <!-- Quiz Section (hidden initially) -->
+        <div id="quizSection" class="hidden">
+            <h2 id="quizQuestion"></h2>
+            <div id="quizOptions"></div>
+        </div>
+
+        <!-- Proposal Section (hidden initially) -->
+        <div id="proposalSection" class="hidden">
+            <h2>Would you like to spend a day with me on a beach UwU? 😊</h2>
+            <button id="yesBtn">Yes!</button>
+            <button id="noBtn">No</button>
+        </div>
+
+        <!-- Response Section (hidden initially) -->
+        <div id="responseSection" class="hidden">
+            <h2 id="responseMessage"></h2>
+        </div>
+    </div>
+
+    <script>
+        const nameInput = document.getElementById('nameInput');
+        const submitNameBtn = document.getElementById('submitNameBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const quizSection = document.getElementById('quizSection');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const proposalSection = document.getElementById('proposalSection');
+        const responseSection = document.getElementById('responseSection');
+        const responseMessage = document.getElementById('responseMessage');
+        const noBtn = document.getElementById('noBtn');
+
+        // Correct name and quiz questions/answers
+        const correctName = "Dei";
+        const quizData = [
+            {
+                question: "Which cake is Dei's favorite?",
+                options: ["Tiramisu cake", "Chocolate cake", "Cheesecake"],
+                answer: "Tiramisu cake"
+            },
+            {
+                question: "How many siblings does Dei have?",
+                options: ["5", "2", "3"],
+                answer: "5"
+            },
+            {
+                question: "What do I love to call her?",
+                options: ["Lil Dei", "Princess", "Dei"],
+                answer: "Lil Dei"
+            }
+        ];
+        let currentQuestionIndex = 0;
+
+        // Entry name validation
+        submitNameBtn.addEventListener('click', () => {
+            const enteredName = nameInput.value.trim();
+
+            if (enteredName === correctName) {
+                errorMessage.classList.add('hidden');
+                quizSection.classList.remove('hidden');
+                loadQuestion();
+            } else {
+                errorMessage.classList.remove('hidden');
+            }
+        });
+
+        // Function to load quiz question
+        function loadQuestion() {
+            if (currentQuestionIndex < quizData.length) {
+                const currentQuestion = quizData[currentQuestionIndex];
+                quizQuestion.textContent = currentQuestion.question;
+                quizOptions.innerHTML = '';
+
+                currentQuestion.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.addEventListener('click', () => checkAnswer(option));
+                    quizOptions.appendChild(button);
+                });
+            } else {
+                // Show proposal section if quiz is completed
+                quizSection.classList.add('hidden');
+                proposalSection.classList.remove('hidden');
+            }
+        }
+
+        // Function to check the answer
+        function checkAnswer(selectedOption) {
+            const correctAnswer = quizData[currentQuestionIndex].answer;
+            if (selectedOption === correctAnswer) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                alert("That's not correct. Try again!");
+            }
+        }
+
+        // "Yes" button event
+        document.getElementById('yesBtn').addEventListener('click', () => {
+            proposalSection.classList.add('hidden');
+            responseSection.classList.remove('hidden');
+            responseMessage.textContent = 'See you soon, Dei 😉';
+        });
+
+        // "No" button hover movement
+        noBtn.addEventListener('mouseover', () => {
+            const randomX = Math.floor(Math.random() * (window.innerWidth - noBtn.offsetWidth));
+            const randomY = Math.floor(Math.random() * (window.innerHeight - noBtn.offsetHeight));
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+        });
+    </script>
+</body>
+</html>
